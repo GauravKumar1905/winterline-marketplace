@@ -1,113 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WinterLine - AI Tools Marketplace</title>
-
-  <!-- Google Fonts: Quicksand -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Gel-Morphism Styles -->
-  <link rel="stylesheet" href="/css/gel-morphism.css">
-
-  <!-- Page Styles -->
-  <link rel="stylesheet" href="/css/pages.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinterLine - AI Tools Marketplace</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container { text-align: center; padding: 2rem; max-width: 800px; }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+        .stats { display: flex; gap: 2rem; justify-content: center; margin: 2rem 0; }
+        .stat { background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; backdrop-filter: blur(10px); }
+        .stat-number { font-size: 2.5rem; font-weight: bold; }
+        .stat-label { font-size: 0.9rem; opacity: 0.8; }
+        .buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+        .btn {
+            padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1rem;
+            cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: white; color: #667eea; font-weight: 600; }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: white; }
+        .status { margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; }
+        .status.ok { border-left: 4px solid #10b981; }
+        .status.error { border-left: 4px solid #ef4444; }
+    </style>
 </head>
 <body>
-  <div class="page-wrapper">
-    <!-- Navbar -->
-    <div id="navbar-container"></div>
-
-    <!-- Hero Section -->
-    <section class="hero gel-packet">
-      <h1 class="hero-heading">Discover & Share AI Tools</h1>
-      <p class="hero-subtext">The marketplace for AI tools, Claude Code skills, and automation</p>
-
-      <div class="hero-search">
-        <input
-          type="text"
-          id="search-input"
-          class="hero-search-input gel-input"
-          placeholder="Search tools..."
-          aria-label="Search tools"
-        >
-        <button id="search-btn" class="hero-search-btn gel-btn" aria-label="Search">
-          Search
-        </button>
-      </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories-section">
-      <div class="gel-packet">
-        <h2 class="section-title">Browse by Category</h2>
-        <div id="categories-container" class="categories-grid">
-          <div class="loading"></div>
+    <div class="container">
+        <h1>🚀 WinterLine</h1>
+        <p>Discover the best tools in the Claude AI ecosystem</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">115+</div>
+                <div class="stat-label">Tools</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">9</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">40</div>
+                <div class="stat-label">MCP Servers</div>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Featured Tools Section -->
-    <section class="featured-section">
-      <div class="gel-packet">
-        <h2 class="section-title">Trending Tools</h2>
-        <div id="tools-container" class="tools-grid">
-          <div class="loading"></div>
+        <div class="buttons">
+            <a href="/api/health" class="btn btn-primary">API Status</a>
+            <button onclick="testTools()" class="btn btn-secondary">Browse Tools</button>
         </div>
-      </div>
-    </section>
 
-    <!-- How It Works Section -->
-    <section class="how-it-works">
-      <div class="gel-packet">
-        <h2 class="section-title">How It Works</h2>
-        <div class="steps-grid">
-          <div class="step">
-            <div class="step-number">1</div>
-            <h3 class="step-title">Browse</h3>
-            <p class="step-desc">Explore thousands of AI tools and Claude Code skills in our marketplace.</p>
-          </div>
-          <div class="step">
-            <div class="step-number">2</div>
-            <h3 class="step-title">Download</h3>
-            <p class="step-desc">Download your favorite tools and integrate them into your projects.</p>
-          </div>
-          <div class="step">
-            <div class="step-number">3</div>
-            <h3 class="step-title">Build</h3>
-            <p class="step-desc">Create amazing things with AI tools and share your own creations.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+        <div id="status" class="status" style="display:none;"></div>
 
-    <!-- Stats Bar -->
-    <section class="stats-bar gel-packet">
-      <div class="stat-item">
-        <div class="stat-number" id="stat-tools">0</div>
-        <div class="stat-label">Tools Listed</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number" id="stat-downloads">0</div>
-        <div class="stat-label">Total Downloads</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number" id="stat-creators">0</div>
-        <div class="stat-label">Active Creators</div>
-      </div>
-    </section>
+        <p style="margin-top: 3rem; font-size: 0.9rem;">
+            MCP Servers • VS Code Extensions • CLI Tools • APIs & More
+        </p>
+    </div>
 
-    <!-- Footer -->
-    <div id="footer-container"></div>
-  </div>
+    <script>
+        async function checkHealth() {
+            try {
+                const res = await fetch('/api/health');
+                const data = await res.json();
+                const statusEl = document.getElementById('status');
+                statusEl.style.display = 'block';
+                statusEl.className = 'status ok';
+                statusEl.innerHTML = `✅ API Status: ${data.status}<br>Database: ${data.database}`;
+            } catch (e) {
+                const statusEl = document.getElementById('status');
+                statusEl.style.display = 'block';
+                statusEl.className = 'status error';
+                statusEl.innerHTML = `❌ API Error: ${e.message}`;
+            }
+        }
 
-  <!-- App Core Module -->
-  <script src="/js/app.js"></script>
+        async function testTools() {
+            const statusEl = document.getElementById('status');
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '⏳ Loading tools...';
+            try {
+                const res = await fetch('/api/tools?limit=5');
+                const data = await res.json();
+                statusEl.className = 'status ok';
+                statusEl.innerHTML = `✅ Found ${data.total} tools! Top 5 loaded.<br><a href="#" onclick="window.location.reload()" style="color: white;">Test again</a>`;
+            } catch (e) {
+                statusEl.className = 'status error';
+                statusEl.innerHTML = `❌ Error loading tools: ${e.message}`;
+            }
+        }
 
-  <!-- Home Page Logic -->
-  <script src="/js/home.js"></script>
+        // Auto-check on load
+        checkHealth();
+    </script>
 </body>
 </html>

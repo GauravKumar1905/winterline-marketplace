@@ -1,173 +1,161 @@
 const express = require('express');
-const { requireAuth, attachUser } = require('../middleware/auth');
 
 module.exports = (db, upload) => {
   const router = express.Router();
-  router.use(attachUser);
 
-  // GET /api/tools/categories - MUST be before /:id
-  router.get('/categories', (req, res) => {
+  // Get all tools with search and filters
+  router.get('/', async (req, res) => {
     try {
-      const categories = db.prepare('SELECT id, name, slug, icon FROM categories ORDER BY name').all();
-      res.json({ categories });
-    } catch (err) {
-      console.error('Get categories error:', err);
-      res.status(500).json({ error: 'Failed to fetch categories' });
-    }
-  });
-
-  // GET /api/tools - List tools with filters
-  router.get('/', (req, res) => {
-    try {
-      const { search, category, sort, page = 1, limit = 12 } = req.query;
-      let query = `SELECT t.id, t.name, t.slug, t.description, t.short_desc, t.category, t.rating,
-        t.download_count, t.install_count, t.stars, t.creator_id, t.creator_name,
-        t.icon_url, t.tags, t.version, t.source, t.github_url, t.website_url,
-        t.extension_store_url, t.pricing_model, t.license, t.last_updated, t.created_at
-        FROM tools t WHERE 1=1`;
-      let params = [];
+      const { search, category, sort, limit = 50, offset = 0 } = req.query;
+      
+      let sql = 'SELECT * FROM tools WHERE 1=1';
+      const params = [];
 
       if (search) {
-        query += ' AND (t.name LIKE ? OR t.description LIKE ? OR t.tags LIKE ?)';
-        params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+        sql += ' AND (name LIKE ? OR description LIKE ? OR short_desc LIKE ? OR tags LIKE ?)';
+        const searchPattern = `%${search}%`;
+        params.push(searchPattern, searchPattern, searchPattern, searchPattern);
       }
-      if (category) {
-        query += ' AND t.category = ?';
+
+      if (category && category !== 'all') {
+        sql += ' AND category = ?';
         params.push(category);
       }
-      if (sort === 'newest') {
-        query += ' ORDER BY t.created_at DESC';
-      } else if (sort === 'highest-rated' || sort === 'rating') {
-        query += ' ORDER BY t.rating DESC';
-      } else if (sort === 'stars') {
-        query += ' ORDER BY t.stars DESC';
-      } else {
-        query += ' ORDER BY t.download_count DESC';
+
+      switch (sort) {
+        case 'stars': sql += ' ORDER BY stars DESC'; break;
+        case 'recent': sql += ' ORDER BY created_at DESC'; break;
+        case 'rating': sql += ' ORDER BY rating DESC'; break;
+        case 'name': sql += ' ORDER BY name ASC'; break;
+        default: sql += ' ORDER BY stars DESC';
       }
 
-      const offset = (parseInt(page) - 1) * parseInt(limit);
-      query += ' LIMIT ? OFFSET ?';
-      params.push(parseInt(limit), offset);
+      sql += ' LIMIT ? OFFSET ?';
+      params.push(parseInt(limit), parseInt(offset));
 
-      const tools = db.prepare(query).all(...params);
+      const tools = await db.prepare(sql).all(...params);
 
-      // Get total count for pagination
-      let countQuery = 'SELECT COUNT(*) as total FROM tools WHERE 1=1';
-      let countParams = [];
+      let countSql = 'SELECT COUNT(*) as total FROM tools WHERE 1=1';
+      const countParams = [];
       if (search) {
-        countQuery += ' AND (name LIKE ? OR description LIKE ? OR tags LIKE ?)';
-        countParams.push(`%${search}%`, `%${search}%`, `%${search}%`);
+        countSql += ' AND (name LIKE ? OR description LIKE ? OR short_desc LIKE ? OR tags LIKE ?)';
+        const searchPattern = `%${search}%`;
+        countParams.push(searchPattern, searchPattern, searchPattern, searchPattern);
       }
-      if (category) {
-        countQuery += ' AND category = ?';
+      if (category && category !== 'all') {
+        countSql += ' AND category = ?';
         countParams.push(category);
       }
-      const countResult = db.prepare(countQuery).get(...countParams);
 
-      res.json({
-        tools,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        total: countResult ? countResult.total : 0
-      });
+      const countResult = await db.prepare(countSql).get(...countParams);
+      const total = countResult ? countResult.total : 0;
+
+      res.json({ tools, total, limit: parseInt(limit), offset: parseInt(offset) });
     } catch (err) {
       console.error('Get tools error:', err);
-      res.status(500).json({ error: 'Failed to fetch tools' });
+      res.status(500).json({ error: err.message });
     }
   });
 
-  // GET /api/tools/:id - Single tool with all fields
-  router.get('/:id', (req, res) => {
+  // Get single tool by ID
+  router.get('/:id', async (req, res) => {
     try {
-      const { id } = req.params;
-      const tool = db.prepare(`SELECT t.* FROM tools t WHERE t.id = ?`).get(id);
-
+      const tool = await db.prepare('SELECT * FROM tools WHERE id = ?').get(req.params.id);
       if (!tool) {
         return res.status(404).json({ error: 'Tool not found' });
       }
+
+      const reviews = await db.prepare(`
+        SELECT r.*, u.username, u.profile_image 
+        FROM reviews r 
+        JOIN users u ON r.creator_id = u.id 
+        WHERE r.tool_id = ? 
+        ORDER BY r.created_at DESC
+      `).all(req.params.id);
+
+      tool.reviews = reviews;
       res.json({ tool });
     } catch (err) {
       console.error('Get tool error:', err);
-      res.status(500).json({ error: 'Failed to fetch tool' });
+      res.status(500).json({ error: err.message });
     }
   });
 
-  // POST /api/tools - Create tool (auth required)
-  router.post('/', requireAuth, upload.fields([
-    { name: 'icon', maxCount: 1 },
-    { name: 'file', maxCount: 1 }
-  ]), (req, res) => {
+  // Submit new tool (requires auth)
+  router.post('/', upload.single('icon'), async (req, res) => {
     try {
-      const { name, description, short_desc, category, version, tags, download_url } = req.body;
-      const userId = req.session.userId;
-
-      if (!name || !description || !category) {
-        return res.status(400).json({ error: 'Name, description, and category are required' });
+      if (!req.session.userId) {
+        return res.status(401).json({ error: 'Authentication required' });
       }
 
-      const iconUrl = req.files?.icon ? `/uploads/${req.files.icon[0].filename}` : '';
-      const fileUrl = req.files?.file ? `/uploads/${req.files.file[0].filename}` : (download_url || '');
-      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const { name, description, category, website_url, github_url } = req.body;
 
-      const result = db.prepare(`
-        INSERT INTO tools (name, slug, description, short_desc, category, version, creator_id, icon_url, file_url, rating, download_count, tags, source)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?, 'manual')
-      `).run(name, slug, description, short_desc || '', category, version || '1.0.0', userId, iconUrl, fileUrl, tags || '[]');
+      if (!name || !description || !category) {
+        return res.status(400).json({ error: 'Name, description, and category required' });
+      }
 
-      res.status(201).json({ message: 'Tool created', toolId: result.lastInsertRowid });
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const result = await db.prepare(`
+        INSERT INTO tools (name, slug, description, short_desc, category, creator_id, creator_name, website_url, github_url, source)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'user-submitted')
+      `).run(
+        name, slug, description, description.substring(0, 150),
+        category, req.session.userId, req.session.username,
+        website_url || '', github_url || ''
+      );
+
+      res.json({ success: true, id: result.lastInsertRowid });
     } catch (err) {
-      console.error('Create tool error:', err);
-      res.status(500).json({ error: 'Failed to create tool' });
+      console.error('Submit tool error:', err);
+      res.status(500).json({ error: err.message });
     }
   });
 
-  // GET /api/tools/:id/reviews
-  router.get('/:id/reviews', (req, res) => {
+  // Add review (requires auth)
+  router.post('/:id/reviews', async (req, res) => {
     try {
-      const { id } = req.params;
-      const reviews = db.prepare(`
-        SELECT r.id, r.rating, r.comment, r.created_at,
-          u.id as user_id, u.username, u.profile_image
-        FROM reviews r
-        LEFT JOIN users u ON r.creator_id = u.id
-        WHERE r.tool_id = ?
-        ORDER BY r.created_at DESC
-      `).all(id);
-      res.json({ reviews });
-    } catch (err) {
-      console.error('Get reviews error:', err);
-      res.status(500).json({ error: 'Failed to fetch reviews' });
-    }
-  });
+      if (!req.session.userId) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
 
-  // POST /api/tools/:id/reviews - Add review (auth required)
-  router.post('/:id/reviews', requireAuth, (req, res) => {
-    try {
-      const { id } = req.params;
       const { rating, comment } = req.body;
-      const userId = req.session.userId;
+      const toolId = req.params.id;
 
       if (!rating || rating < 1 || rating > 5) {
         return res.status(400).json({ error: 'Rating must be between 1 and 5' });
       }
 
-      const existing = db.prepare('SELECT id FROM reviews WHERE tool_id = ? AND creator_id = ?').get(id, userId);
+      const tool = await db.prepare('SELECT id FROM tools WHERE id = ?').get(toolId);
+      if (!tool) {
+        return res.status(404).json({ error: 'Tool not found' });
+      }
+
+      const existing = await db.prepare('SELECT id FROM reviews WHERE tool_id = ? AND creator_id = ?').get(toolId, req.session.userId);
       if (existing) {
-        return res.status(409).json({ error: 'You already reviewed this tool' });
+        return res.status(400).json({ error: 'You already reviewed this tool' });
       }
 
-      db.prepare('INSERT INTO reviews (tool_id, creator_id, rating, comment) VALUES (?, ?, ?, ?)').run(id, userId, rating, comment || '');
+      const result = await db.prepare('INSERT INTO reviews (tool_id, creator_id, rating, comment) VALUES (?, ?, ?, ?)').run(toolId, req.session.userId, rating, comment || '');
 
-      // Update tool average rating
-      const avg = db.prepare('SELECT AVG(rating) as avg_rating FROM reviews WHERE tool_id = ?').get(id);
-      if (avg) {
-        db.prepare('UPDATE tools SET rating = ? WHERE id = ?').run(Math.round(avg.avg_rating * 10) / 10, id);
+      const avgResult = await db.prepare('SELECT AVG(rating) as avgRating FROM reviews WHERE tool_id = ?').get(toolId);
+      if (avgResult && avgResult.avgRating) {
+        await db.prepare('UPDATE tools SET rating = ? WHERE id = ?').run(avgResult.avgRating, toolId);
       }
 
-      res.status(201).json({ message: 'Review added' });
+      res.json({ success: true, id: result.lastInsertRowid });
     } catch (err) {
-      console.error('Create review error:', err);
-      res.status(500).json({ error: 'Failed to create review' });
+      console.error('Add review error:', err);
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Get categories
+  router.get('/meta/categories', async (req, res) => {
+    try {
+      const categories = await db.prepare('SELECT * FROM categories ORDER BY name').all();
+      res.json({ categories });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
   });
 
