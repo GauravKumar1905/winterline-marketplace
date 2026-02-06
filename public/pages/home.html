@@ -8,103 +8,722 @@
         window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/gel-morphism.css">
+    <link rel="stylesheet" href="../css/pages.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --surface: #0A0A0A;
+            --surface-1: #111111;
+            --surface-2: #181818;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.14);
+            --text-primary: #FFFFFF;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --font-sans: 'Instrument Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: var(--font-sans);
+            background: var(--surface);
+            color: #E0E0E0;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        }
+
+        .hero-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.1;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* ── Search ── */
+        .search-wrap {
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            font-size: 0.95rem;
+            font-family: var(--font-sans);
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input::placeholder { color: var(--text-muted); }
+        .search-input:focus { border-color: var(--border-hover); }
+
+        /* ── Stats ribbon ── */
+        .stats-ribbon {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            padding: 32px 0 0;
+            margin-bottom: 0;
+        }
+
+        .stat-block {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ── Category pills ── */
+        .categories-section {
+            padding: 48px 0 8px;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .category-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pill {
+            padding: 7px 16px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            font-family: var(--font-sans);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .pill:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .pill.active {
+            background: var(--text-primary);
+            color: var(--surface);
+            border-color: var(--text-primary);
+        }
+
+        /* ── Tools grid ── */
+        .tools-section {
+            padding: 32px 0 60px;
+        }
+
+        .tools-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+        }
+
+        .tools-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .sort-control {
+            font-size: 0.82rem;
+            font-family: var(--font-sans);
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 28px 6px 12px;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23666' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .sort-control option { background: #111; color: #fff; }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* ── Tool card ── */
+        .tool-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.25s;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .tool-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        .card-visual {
+            height: 140px;
+            background: var(--surface-2);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
-        .container { text-align: center; padding: 2rem; max-width: 800px; }
-        h1 { font-size: 3rem; margin-bottom: 1rem; }
-        p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
-        .stats { display: flex; gap: 2rem; justify-content: center; margin: 2rem 0; }
-        .stat { background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 10px; backdrop-filter: blur(10px); }
-        .stat-number { font-size: 2.5rem; font-weight: bold; }
-        .stat-label { font-size: 0.9rem; opacity: 0.8; }
-        .buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
-        .btn {
-            padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1rem;
-            cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.2s;
+
+        .card-icon {
+            font-size: 2.6rem;
+            line-height: 1;
+            opacity: 0.7;
         }
-        .btn:hover { transform: translateY(-2px); }
-        .btn-primary { background: white; color: #667eea; font-weight: 600; }
-        .btn-secondary { background: rgba(255,255,255,0.2); color: white; }
-        .status { margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; }
-        .status.ok { border-left: 4px solid #10b981; }
-        .status.error { border-left: 4px solid #ef4444; }
+
+        .card-icon img {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .card-pricing {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.08);
+            color: var(--text-secondary);
+        }
+
+        .card-body {
+            padding: 18px 20px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .card-category {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+        }
+
+        .card-creator {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .card-stars {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-stars svg {
+            color: #fff;
+            opacity: 0.6;
+        }
+
+        .card-downloads {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+        }
+
+        /* ── Pagination ── */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px 0 60px;
+        }
+
+        .page-btn {
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            font-family: var(--font-mono);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .page-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+        .page-btn.active { background: #fff; color: #000; border-color: #fff; }
+        .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* ── Loading skeleton ── */
+        .skeleton-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .skeleton-visual {
+            height: 140px;
+            background: var(--surface-2);
+        }
+
+        .skeleton-body {
+            padding: 18px 20px 20px;
+        }
+
+        .skeleton-line {
+            height: 14px;
+            border-radius: 4px;
+            background: var(--surface-2);
+            margin-bottom: 10px;
+        }
+
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.medium { width: 85%; }
+
+        @keyframes shimmer {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .skeleton-card { animation: shimmer 1.8s infinite ease-in-out; }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p { color: var(--text-muted); }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .tools-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-ribbon { gap: 32px; }
+        }
+
+        @media (max-width: 640px) {
+            .hero { padding: 56px 0 40px; }
+            .hero h1 { font-size: 2rem; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .stats-ribbon { gap: 24px; }
+            .stat-num { font-size: 1.2rem; }
+            .tools-header { flex-direction: column; gap: 12px; }
+            .category-pills { gap: 6px; }
+            .pill { font-size: 0.78rem; padding: 6px 12px; }
+        }
     </style>
 </head>
 <body>
+
+    <nav class="navbar"></nav>
+
     <div class="container">
-        <h1>🚀 WinterLine</h1>
-        <p>Discover the best tools in the Claude AI ecosystem</p>
-        
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number">115+</div>
-                <div class="stat-label">Tools</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">9</div>
-                <div class="stat-label">Categories</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">40</div>
-                <div class="stat-label">MCP Servers</div>
-            </div>
-        </div>
+        <!-- Hero -->
+        <section class="hero">
+            <span class="hero-label">AI Tools Marketplace</span>
+            <h1>WinterLine</h1>
+            <p class="hero-subtitle">Discover, compare, and deploy the best tools in the Claude AI ecosystem.</p>
 
-        <div class="buttons">
-            <a href="/api/health" class="btn btn-primary">API Status</a>
-            <button onclick="testTools()" class="btn btn-secondary">Browse Tools</button>
-        </div>
+            <div class="search-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search tools, MCP servers, extensions..." />
+            </div>
 
-        <div id="status" class="status" style="display:none;"></div>
+            <div class="stats-ribbon" id="statsRibbon">
+                <div class="stat-block">
+                    <div class="stat-num" id="toolCount">--</div>
+                    <div class="stat-lbl">Tools</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-num" id="catCount">--</div>
+                    <div class="stat-lbl">Categories</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-num" id="mcpCount">--</div>
+                    <div class="stat-lbl">MCP Servers</div>
+                </div>
+            </div>
+        </section>
 
-        <p style="margin-top: 3rem; font-size: 0.9rem;">
-            MCP Servers • VS Code Extensions • CLI Tools • APIs & More
-        </p>
+        <!-- Categories -->
+        <section class="categories-section">
+            <div class="section-label">Filter by category</div>
+            <div class="category-pills" id="categoryPills">
+                <button class="pill active" data-category="all">All</button>
+            </div>
+        </section>
+
+        <!-- Tools -->
+        <section class="tools-section">
+            <div class="tools-header">
+                <span class="tools-count" id="toolsCount">Loading...</span>
+                <select class="sort-control" id="sortSelect">
+                    <option value="stars">Most Popular</option>
+                    <option value="recent">Newest</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="name">A-Z</option>
+                </select>
+            </div>
+
+            <div class="tools-grid" id="toolsGrid">
+                <!-- skeleton placeholders -->
+                <div class="skeleton-card"><div class="skeleton-visual"></div><div class="skeleton-body"><div class="skeleton-line medium"></div><div class="skeleton-line short"></div><div class="skeleton-line"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-visual"></div><div class="skeleton-body"><div class="skeleton-line medium"></div><div class="skeleton-line short"></div><div class="skeleton-line"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-visual"></div><div class="skeleton-body"><div class="skeleton-line medium"></div><div class="skeleton-line short"></div><div class="skeleton-line"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-visual"></div><div class="skeleton-body"><div class="skeleton-line medium"></div><div class="skeleton-line short"></div><div class="skeleton-line"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-visual"></div><div class="skeleton-body"><div class="skeleton-line medium"></div><div class="skeleton-line short"></div><div class="skeleton-line"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-visual"></div><div class="skeleton-body"><div class="skeleton-line medium"></div><div class="skeleton-line short"></div><div class="skeleton-line"></div></div></div>
+            </div>
+
+            <div class="pagination" id="pagination"></div>
+        </section>
     </div>
 
+    <footer class="footer"></footer>
+
+    <script src="../js/app.js"></script>
     <script>
-        async function checkHealth() {
+    (function() {
+        const PAGE_SIZE = 12;
+        let currentCategory = 'all';
+        let currentSort = 'stars';
+        let currentSearch = '';
+        let currentPage = 1;
+        let totalTools = 0;
+        let debounceTimer = null;
+
+        // ── Init ──
+        document.addEventListener('DOMContentLoaded', async () => {
+            await Auth.check();
+            renderNavbar('.navbar');
+            renderFooter('.footer');
+            loadTools();
+            loadCategories();
+
+            document.getElementById('searchInput').addEventListener('input', e => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    currentSearch = e.target.value.trim();
+                    currentPage = 1;
+                    loadTools();
+                }, 300);
+            });
+
+            document.getElementById('sortSelect').addEventListener('change', e => {
+                currentSort = e.target.value;
+                currentPage = 1;
+                loadTools();
+            });
+        });
+
+        // ── Load categories ──
+        async function loadCategories() {
             try {
-                const res = await fetch('/api/health');
-                const data = await res.json();
-                const statusEl = document.getElementById('status');
-                statusEl.style.display = 'block';
-                statusEl.className = 'status ok';
-                statusEl.innerHTML = `✅ API Status: ${data.status}<br>Database: ${data.database}`;
-            } catch (e) {
-                const statusEl = document.getElementById('status');
-                statusEl.style.display = 'block';
-                statusEl.className = 'status error';
-                statusEl.innerHTML = `❌ API Error: ${e.message}`;
+                const data = await API.get('/tools?limit=200');
+                const tools = data.tools || [];
+                const cats = {};
+                let mcpCount = 0;
+
+                tools.forEach(t => {
+                    if (t.category) {
+                        cats[t.category] = (cats[t.category] || 0) + 1;
+                    }
+                    if (t.category && t.category.toLowerCase().includes('mcp')) mcpCount++;
+                });
+
+                document.getElementById('toolCount').textContent = data.total || tools.length;
+                document.getElementById('catCount').textContent = Object.keys(cats).length;
+                document.getElementById('mcpCount').textContent = mcpCount || cats['MCP Servers'] || '--';
+
+                const container = document.getElementById('categoryPills');
+                const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+
+                sorted.forEach(([cat, count]) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'pill';
+                    btn.dataset.category = cat;
+                    btn.textContent = cat;
+                    btn.addEventListener('click', () => selectCategory(cat));
+                    container.appendChild(btn);
+                });
+            } catch (err) {
+                console.error('Failed to load categories:', err);
             }
         }
 
-        async function testTools() {
-            const statusEl = document.getElementById('status');
-            statusEl.style.display = 'block';
-            statusEl.innerHTML = '⏳ Loading tools...';
+        function selectCategory(cat) {
+            currentCategory = cat;
+            currentPage = 1;
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            const target = document.querySelector(`.pill[data-category="${cat}"]`);
+            if (target) target.classList.add('active');
+            loadTools();
+        }
+
+        // ── Load tools ──
+        async function loadTools() {
             try {
-                const res = await fetch('/api/tools?limit=5');
-                const data = await res.json();
-                statusEl.className = 'status ok';
-                statusEl.innerHTML = `✅ Found ${data.total} tools! Top 5 loaded.<br><a href="#" onclick="window.location.reload()" style="color: white;">Test again</a>`;
-            } catch (e) {
-                statusEl.className = 'status error';
-                statusEl.innerHTML = `❌ Error loading tools: ${e.message}`;
+                const params = new URLSearchParams();
+                if (currentSearch) params.append('search', currentSearch);
+                if (currentCategory !== 'all') params.append('category', currentCategory);
+                params.append('sort', currentSort);
+                params.append('limit', PAGE_SIZE);
+                params.append('offset', (currentPage - 1) * PAGE_SIZE);
+
+                const data = await API.get('/tools?' + params.toString());
+                const tools = data.tools || [];
+                totalTools = data.total || 0;
+
+                document.getElementById('toolsCount').textContent = totalTools + ' tools';
+                renderGrid(tools);
+                renderPagination();
+            } catch (err) {
+                console.error('Failed to load tools:', err);
+                document.getElementById('toolsGrid').innerHTML = '<div class="empty-state"><h3>Failed to load tools</h3><p>Please try again later.</p></div>';
             }
         }
 
-        // Auto-check on load
-        checkHealth();
+        // ── Render grid ──
+        function renderGrid(tools) {
+            const grid = document.getElementById('toolsGrid');
+
+            if (!tools.length) {
+                grid.innerHTML = '<div class="empty-state"><h3>No tools found</h3><p>Try adjusting your search or filters.</p></div>';
+                return;
+            }
+
+            grid.innerHTML = tools.map(t => {
+                const icon = t.icon_url
+                    ? `<img src="${esc(t.icon_url)}" alt="" onerror="this.parentElement.innerHTML='<span style=\\'font-size:2.2rem;opacity:.4\\'>&#9881;</span>'">`
+                    : '<span style="font-size:2.2rem;opacity:.4">&#9881;</span>';
+
+                const rating = t.rating ? parseFloat(t.rating).toFixed(1) : null;
+                const downloads = t.download_count ? fmtNum(t.download_count) : null;
+                const stars = t.stars ? fmtNum(t.stars) : null;
+
+                return `
+                <a href="/tool/${t.id}" class="tool-card">
+                    <div class="card-visual">
+                        <div class="card-icon">${icon}</div>
+                        ${t.pricing_model && t.pricing_model !== 'free' ? `<span class="card-pricing">${esc(t.pricing_model)}</span>` : ''}
+                    </div>
+                    <div class="card-body">
+                        <div class="card-name">${esc(t.name)}</div>
+                        <div class="card-desc">${esc(t.short_desc || t.description || '')}</div>
+                        <div class="card-meta">
+                            ${t.category ? `<span class="card-category">${esc(t.category)}</span>` : ''}
+                            ${t.creator_name ? `<span class="card-creator">by ${esc(t.creator_name)}</span>` : ''}
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-stars">
+                                ${stars !== null ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> ${stars}` : ''}
+                            </div>
+                            ${rating ? `<div class="card-rating">&#9733; ${rating}</div>` : ''}
+                            ${downloads ? `<div class="card-downloads"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> ${downloads}</div>` : ''}
+                        </div>
+                    </div>
+                </a>`;
+            }).join('');
+        }
+
+        // ── Pagination ──
+        function renderPagination() {
+            const container = document.getElementById('pagination');
+            const totalPages = Math.ceil(totalTools / PAGE_SIZE);
+
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+            let html = '';
+            if (currentPage > 1) {
+                html += `<button class="page-btn" onclick="window.__goPage(${currentPage - 1})">Prev</button>`;
+            }
+
+            const start = Math.max(1, currentPage - 2);
+            const end = Math.min(totalPages, currentPage + 2);
+
+            if (start > 1) html += `<button class="page-btn" onclick="window.__goPage(1)">1</button>`;
+            if (start > 2) html += `<span style="padding:8px 4px;color:#555">...</span>`;
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="window.__goPage(${i})">${i}</button>`;
+            }
+
+            if (end < totalPages - 1) html += `<span style="padding:8px 4px;color:#555">...</span>`;
+            if (end < totalPages) html += `<button class="page-btn" onclick="window.__goPage(${totalPages})">${totalPages}</button>`;
+
+            if (currentPage < totalPages) {
+                html += `<button class="page-btn" onclick="window.__goPage(${currentPage + 1})">Next</button>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        window.__goPage = function(p) {
+            currentPage = p;
+            loadTools();
+            window.scrollTo({ top: document.querySelector('.tools-section').offsetTop - 20, behavior: 'smooth' });
+        };
+
+        // ── Helpers ──
+        function esc(str) {
+            if (!str) return '';
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        function fmtNum(n) {
+            n = parseInt(n) || 0;
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+            return n.toString();
+        }
+    })();
     </script>
 </body>
 </html>
