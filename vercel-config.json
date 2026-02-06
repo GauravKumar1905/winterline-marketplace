@@ -1,0 +1,20 @@
+{
+  "name": "winterline-marketplace",
+  "version": 2,
+  "builds": [
+    {
+      "src": "server-turso.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server-turso.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server-turso.js"
+    }
+  ]
+}
