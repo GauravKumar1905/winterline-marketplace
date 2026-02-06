@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Your AI Tool - WinterLine</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/gel-morphism.css">
+  <link rel="stylesheet" href="/css/pages.css">
+
+  <style>
+    /* Upload page specific styles */
+    .upload-page-header {
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .upload-page-header h1 {
+      margin-bottom: 15px;
+    }
+
+    .upload-page-header .subtitle {
+      font-size: 1.1rem;
+      color: #7B8794;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .login-prompt {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg, rgba(15, 20, 40, 0.95) 0%, rgba(13, 17, 23, 0.93) 100%);
+      border-radius: 50px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 40px;
+      box-shadow:
+        inset -2px -2px 8px rgba(232, 236, 240, 0.05),
+        inset 3px 3px 8px rgba(255, 255, 255, 0.02),
+        inset -8px -8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-prompt h2 {
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+      color: #E8ECF0;
+    }
+
+    .login-prompt p {
+      margin-bottom: 25px;
+      color: #7B8794;
+    }
+
+    .login-prompt .gel-orange {
+      display: inline-block;
+    }
+
+    /* Form section wrapper */
+    .upload-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Progress indicator */
+    .upload-progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding: 0 20px;
+    }
+
+    .upload-progress-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      position: relative;
+    }
+
+    .upload-progress-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: calc(100% - 40px);
+      height: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .upload-progress-item.active:not(:last-child)::after {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .progress-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #222;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      box-shadow:
+        inset -1px -1px 3px rgba(255, 255, 255, 0.7),
+        inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-progress-item.active .progress-circle {
+      background: #222;
+      color: #FFF;
+      border-color: #222;
+      box-shadow:
+        inset -1px -1px 3px rgba(255, 255, 255, 0.1),
+        inset 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-label {
+      font-weight: 600;
+      color: #E8ECF0;
+      font-size: 0.95rem;
+    }
+
+    .upload-progress-item.active .progress-label {
+      color: #FFF;
+    }
+
+    /* Form steps */
+    .upload-steps {
+      position: relative;
+      z-index: 1;
+    }
+
+    .upload-step-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .upload-step-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Two-column layout for inputs */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    /* File upload area */
+    .file-upload-area {
+      position: relative;
+      border: 2px dashed rgba(255, 255, 255, 0.06);
+      border-radius: 30px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(15, 20, 40, 0.5);
+    }
+
+    .file-upload-area:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .file-upload-area.dragover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .file-upload-area input[type="file"] {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-text {
+      color: #E8ECF0;
+      margin-bottom: 5px;
+    }
+
+    .upload-hint {
+      font-size: 0.85rem;
+      color: #7B8794;
+    }
+
+    /* Preview grid */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .preview-item {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      background: rgba(15, 20, 40, 0.8);
+      box-shadow:
+        inset -1px -1px 4px rgba(232, 236, 240, 0.05);
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .preview-item:hover .remove-btn {
+      opacity: 1;
+    }
+
+    /* Tags input */
+    .tags-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 25px;
+      background: rgba(15, 20, 40, 0.9);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      box-shadow:
+        inset -1px -1px 4px rgba(232, 236, 240, 0.05),
+        inset 1px 1px 4px rgba(255, 255, 255, 0.01),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .tags-input:focus-within {
+      border-color: #FFF;
+      box-shadow:
+        inset -1px -1px 4px rgba(232, 236, 240, 0.08),
+        inset 1px 1px 4px rgba(255, 255, 255, 0.04),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .tag {
+      background: #222;
+      color: #FFF;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tag .tag-remove {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tags-input input {
+      flex: 1;
+      min-width: 100px;
+      border: none;
+      background: transparent;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      color: #E8ECF0;
+      outline: none;
+    }
+
+    .tags-input input::placeholder {
+      color: rgba(123, 135, 148, 0.5);
+    }
+
+    /* Preview card */
+    .preview-card {
+      background: linear-gradient(135deg, rgba(15, 20, 40, 0.98) 0%, rgba(13, 17, 23, 0.96) 100%);
+      border-radius: 45px;
+      overflow: hidden;
+      padding: 0;
+      margin-bottom: 40px;
+      box-shadow:
+        inset -1px -1px 6px rgba(232, 236, 240, 0.05),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.01),
+        inset -6px -6px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .preview-card-thumbnail {
+      width: 100%;
+      height: 250px;
+      background: linear-gradient(135deg, #222 0%, #1A1A1A 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .preview-card-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-card-content {
+      padding: 30px;
+    }
+
+    .preview-card-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #E8ECF0;
+      margin-bottom: 10px;
+    }
+
+    .preview-card-desc {
+      color: #7B8794;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .preview-card-meta {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    /* Form navigation */
+    .form-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-nav button {
+      min-width: 150px;
+    }
+
+    .form-nav .nav-spacer {
+      flex: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-progress {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+      }
+
+      .upload-progress-item {
+        width: 100%;
+      }
+
+      .upload-progress-item:not(:last-child)::after {
+        display: none;
+      }
+
+      .preview-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .form-nav {
+        flex-direction: column;
+      }
+
+      .form-nav button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .upload-page-header {
+        margin-bottom: 30px;
+      }
+
+      .upload-page-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div id="navbar-container"></div>
+
+  <!-- Main content -->
+  <div class="container">
+    <!-- Page header -->
+    <div class="upload-page-header">
+      <h1>Share Your AI Tool</h1>
+      <p class="subtitle">Upload and showcase your latest AI creation to the WinterLine marketplace</p>
+    </div>
+
+    <!-- Login prompt (shown if not authenticated) -->
+    <div id="login-prompt" class="login-prompt" style="display: none;">
+      <h2>Sign In Required</h2>
+      <p>You need to be logged in to upload a tool. Join our community of AI creators today!</p>
+      <a href="/login" class="gel-orange">Sign In</a>
+    </div>
+
+    <!-- Upload form container -->
+    <div id="upload-form-container" class="upload-container" style="display: none;">
+      <div class="gel-packet">
+        <!-- Progress indicator -->
+        <div class="upload-progress">
+          <div class="upload-progress-item active" data-step="1">
+            <div class="progress-circle">1</div>
+            <div class="progress-label">Basic Info</div>
+          </div>
+          <div class="upload-progress-item" data-step="2">
+            <div class="progress-circle">2</div>
+            <div class="progress-label">Details</div>
+          </div>
+          <div class="upload-progress-item" data-step="3">
+            <div class="progress-circle">3</div>
+            <div class="progress-label">Preview</div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form id="upload-form" class="upload-steps">
+          <!-- Step 1: Basic Info -->
+          <div class="upload-step-content active" data-step="1">
+            <div class="form-group form-row full">
+              <label class="form-label">Tool Name <span class="required">*</span></label>
+              <input type="text" id="tool-name" name="toolName" class="gel-input" placeholder="Enter your tool name" required>
+            </div>
+
+            <div class="form-group form-row full">
+              <label class="form-label">Short Description <span class="required">*</span></label>
+              <div style="position: relative;">
+                <input type="text" id="tool-description" name="description" class="gel-input" placeholder="Briefly describe your tool (max 150 characters)" maxlength="150" required>
+                <div style="font-size: 0.85rem; color: #999; margin-top: 5px;">
+                  <span id="char-count">0</span> / 150 characters
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Category <span class="required">*</span></label>
+                <select id="category" name="category" class="gel-input" required>
+                  <option value="">Select a category</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tags <span class="required">*</span></label>
+                <div class="tags-input" id="tags-input">
+                  <input type="text" id="tag-input" placeholder="Add tags (comma separated)">
+                </div>
+                <div style="font-size: 0.85rem; color: #999; margin-top: 8px;">Press Enter or comma to add a tag</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Details -->
+          <div class="upload-step-content" data-step="2">
+            <div class="form-group form-row full">
+              <label class="form-label">Full Description <span class="required">*</span></label>
+              <textarea id="full-description" name="fullDescription" class="gel-input" placeholder="Write a detailed description of your tool..." required></textarea>
+            </div>
+
+            <div class="form-group form-row full">
+              <label class="form-label">Download URL / GitHub Link <span class="required">*</span></label>
+              <input type="url" id="download-url" name="downloadUrl" class="gel-input" placeholder="https://github.com/... or https://..." required>
+            </div>
+
+            <div class="form-group form-row full">
+              <label class="form-label">Tool Thumbnail <span class="required">*</span></label>
+              <div class="file-upload-area" id="thumbnail-upload" data-type="thumbnail">
+                <div class="upload-icon">▲</div>
+                <div class="upload-text">Click or drag to upload thumbnail</div>
+                <div class="upload-hint">PNG, JPG (max 5MB, recommended 800x600)</div>
+                <input type="file" id="thumbnail-input" accept="image/*">
+              </div>
+              <div id="thumbnail-preview" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="form-group form-row full">
+              <label class="form-label">Screenshots</label>
+              <div class="file-upload-area" id="screenshots-upload" data-type="screenshots">
+                <div class="upload-icon">□</div>
+                <div class="upload-text">Click or drag to upload screenshots</div>
+                <div class="upload-hint">PNG, JPG (max 5MB each, up to 5 files)</div>
+                <input type="file" id="screenshots-input" accept="image/*" multiple>
+              </div>
+              <div id="screenshots-preview" class="preview-grid"></div>
+            </div>
+          </div>
+
+          <!-- Step 3: Preview & Submit -->
+          <div class="upload-step-content" data-step="3">
+            <h3 style="margin-bottom: 30px;">Preview Your Tool</h3>
+            <p style="color: #666; margin-bottom: 30px;">This is how your tool will appear on the marketplace:</p>
+
+            <div class="preview-card">
+              <div class="preview-card-thumbnail" id="preview-thumbnail">
+                <div style="font-size: 1.5rem; opacity: 0.2;">■</div>
+              </div>
+              <div class="preview-card-content">
+                <h3 class="preview-card-title" id="preview-title">Tool Name</h3>
+                <p class="preview-card-desc" id="preview-desc">Tool description goes here</p>
+                <div class="preview-card-meta">
+                  <div class="gel-badge" id="preview-category">Category</div>
+                  <div id="preview-tags-container"></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.03); border-radius: 30px; padding: 20px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.06);">
+              <p style="color: #CCC; margin: 0;">
+                <strong>By submitting,</strong> you agree that your tool will be available on the WinterLine marketplace and subject to our terms of service.
+              </p>
+            </div>
+          </div>
+
+          <!-- Navigation buttons -->
+          <div class="form-nav">
+            <button type="button" id="btn-back" class="gel-btn gel-btn-secondary" style="display: none;">
+              ← Back
+            </button>
+            <div class="nav-spacer"></div>
+            <button type="button" id="btn-next" class="gel-btn gel-orange">
+              Next →
+            </button>
+            <button type="submit" id="btn-submit" class="gel-btn gel-orange" style="display: none;">
+              Submit Tool ✓
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+  <script src="/js/upload.js"></script>
+</body>
+</html>

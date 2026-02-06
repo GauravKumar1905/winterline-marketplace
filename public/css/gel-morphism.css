@@ -1,0 +1,480 @@
+/* ============================================================================
+   WinterLine - Clean Professional Dark Theme
+   Palette: Black (#0A0A0A) + White (#FFFFFF) + Gray accents
+   Minimal, professional, no flashy colors
+   ========================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+/* No starfield animation - keep it clean */
+body::before {
+  display: none;
+}
+
+body {
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #0A0A0A;
+  color: #E0E0E0;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  color: #FFFFFF;
+  margin-bottom: 0.5em;
+}
+
+h1 { font-size: 2.25rem; letter-spacing: -0.02em; }
+h2 { font-size: 1.75rem; letter-spacing: -0.015em; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p {
+  color: #888;
+  margin-bottom: 1em;
+  font-weight: 400;
+}
+
+a {
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+strong {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+code {
+  background-color: #1A1A1A;
+  color: #CCC;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* ============================================================================
+   SCROLLBAR
+   ========================================================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+* {
+  scrollbar-color: #333 #0A0A0A;
+  scrollbar-width: thin;
+}
+
+/* ============================================================================
+   CORE CARD/CONTAINER CLASSES
+   ========================================================================== */
+
+.gel-packet {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 28px;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+
+.gel-packet::after {
+  display: none;
+}
+
+.gel-packet:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #111;
+  transform: none;
+  box-shadow: none;
+}
+
+.gel-card {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+
+.gel-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #111;
+  transform: none;
+  box-shadow: none;
+}
+
+.gel-inner {
+  background: #0D0D0D;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.gel-highlight {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid #FFF;
+  padding: 14px;
+  border-radius: 4px;
+}
+
+/* ============================================================================
+   BUTTONS
+   ========================================================================== */
+
+.gel-btn,
+.gel-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  background: #FFFFFF;
+  color: #000;
+  position: relative;
+  overflow: hidden;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.gel-btn::before {
+  display: none;
+}
+
+.gel-btn:hover,
+.gel-btn-primary:hover {
+  opacity: 0.9;
+  background: #FFFFFF;
+  transform: none;
+  box-shadow: none;
+}
+
+.gel-btn:active {
+  opacity: 0.8;
+  transform: none;
+}
+
+.gel-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.gel-btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #CCC;
+}
+
+.gel-btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: transparent;
+  color: #FFF;
+}
+
+.gel-orange {
+  background: #FFFFFF;
+  color: #000;
+}
+
+.gel-yellow {
+  background: #FFFFFF;
+  color: #000;
+}
+
+.gel-yellow:hover {
+  box-shadow: none;
+}
+
+.gel-btn-sm {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+}
+
+/* ============================================================================
+   FORM ELEMENTS
+   ========================================================================== */
+
+.gel-input,
+.gel-textarea,
+.gel-select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #0D0D0D;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #E0E0E0;
+  transition: border-color 0.2s ease;
+  box-shadow: none;
+}
+
+.gel-input::placeholder {
+  color: #555;
+}
+
+.gel-input:focus,
+.gel-textarea:focus,
+.gel-select:focus {
+  outline: none;
+  background: #0D0D0D;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: none;
+}
+
+.gel-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.gel-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #CCC;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+/* ============================================================================
+   BADGES
+   ========================================================================== */
+
+.gel-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #CCC;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: border-color 0.2s ease;
+}
+
+.gel-badge:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.gel-badge-yellow,
+.gel-badge-amber {
+  background: rgba(255, 255, 255, 0.08);
+  color: #CCC;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================================
+   DIVIDER
+   ========================================================================== */
+
+.gel-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 20px 0;
+}
+
+.gel-divider::before {
+  display: none;
+}
+
+/* ============================================================================
+   COLOR BLOBS - DISABLED
+   ========================================================================== */
+
+.color-blob,
+.blob-orange,
+.blob-red,
+.blob-amber {
+  display: none !important;
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.container-sm { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+.container-lg { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-primary { color: #FFF !important; }
+.text-secondary { color: #888 !important; }
+.text-accent { color: #CCC !important; }
+.text-light { color: #E0E0E0 !important; }
+.text-muted { color: #666 !important; }
+
+.m-0 { margin: 0; } .m-1 { margin: 8px; } .m-2 { margin: 16px; } .m-3 { margin: 24px; } .m-4 { margin: 32px; }
+.mt-0 { margin-top: 0; } .mt-1 { margin-top: 8px; } .mt-2 { margin-top: 16px; } .mt-3 { margin-top: 24px; } .mt-4 { margin-top: 32px; }
+.mb-0 { margin-bottom: 0; } .mb-1 { margin-bottom: 8px; } .mb-2 { margin-bottom: 16px; } .mb-3 { margin-bottom: 24px; } .mb-4 { margin-bottom: 32px; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.my-0 { margin-top: 0; margin-bottom: 0; } .my-2 { margin-top: 16px; margin-bottom: 16px; } .my-3 { margin-top: 24px; margin-bottom: 24px; }
+
+.p-0 { padding: 0; } .p-1 { padding: 8px; } .p-2 { padding: 16px; } .p-3 { padding: 24px; } .p-4 { padding: 32px; }
+.pt-0 { padding-top: 0; } .pt-2 { padding-top: 16px; } .pt-3 { padding-top: 24px; }
+.pb-0 { padding-bottom: 0; } .pb-2 { padding-bottom: 16px; } .pb-3 { padding-bottom: 24px; }
+.px-2 { padding-left: 16px; padding-right: 16px; } .px-3 { padding-left: 24px; padding-right: 24px; }
+.py-2 { padding-top: 16px; padding-bottom: 16px; } .py-3 { padding-top: 24px; padding-bottom: 24px; }
+
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-column { display: flex; flex-direction: column; }
+.flex-wrap { display: flex; flex-wrap: wrap; }
+.flex-gap-1 { gap: 8px; } .flex-gap-2 { gap: 16px; } .flex-gap-3 { gap: 24px; }
+
+.grid { display: grid; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.hidden { display: none; }
+.block { display: block; }
+.relative { position: relative; }
+
+.rounded { border-radius: 8px; }
+.rounded-md { border-radius: 12px; }
+.rounded-lg { border-radius: 16px; }
+.rounded-full { border-radius: 9999px; }
+
+/* ============================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  .grid-4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.35rem; }
+  .gel-packet { padding: 20px; }
+  .gel-card { padding: 16px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+
+@media (max-width: 640px) {
+  html { font-size: 15px; }
+  h1 { font-size: 1.5rem; }
+  .gel-packet { padding: 16px; border-radius: 10px; }
+  .gel-card { padding: 14px; border-radius: 8px; }
+  .gel-btn { padding: 10px 18px; font-size: 0.9rem; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 12px; }
+}
+
+@media (max-width: 480px) {
+  html { font-size: 14px; }
+  .gel-packet { padding: 14px; }
+  .gel-card { padding: 12px; }
+}
+
+/* ============================================================================
+   ANIMATIONS - minimal
+   ========================================================================== */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* ============================================================================
+   COMPONENT STATES
+   ========================================================================== */
+
+ul, ol { margin-left: 20px; margin-bottom: 1em; }
+li { margin-bottom: 8px; color: #888; }
+
+table { width: 100%; border-collapse: collapse; margin-bottom: 1.5em; }
+th { background: #141414; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px; text-align: left; color: #CCC; font-weight: 600; }
+td { border-bottom: 1px solid rgba(255,255,255,0.04); padding: 10px; color: #888; }
+tr:hover { background: rgba(255,255,255,0.02); }
+
+blockquote { border-left: 2px solid #333; padding: 14px 18px; margin: 20px 0; color: #888; font-style: italic; background: #0D0D0D; border-radius: 4px; }
+hr { border: none; height: 1px; background: rgba(255,255,255,0.06); margin: 28px 0; }
+
+.success { color: #4ADE80; }
+.error { color: #EF4444; }
+.warning { color: #FBBF24; }
+.info { color: #3B82F6; }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WinterLine - AI Tools Marketplace</title>
+
+  <!-- Google Fonts: Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Gel-Morphism Styles -->
+  <link rel="stylesheet" href="/css/gel-morphism.css">
+
+  <!-- Page Styles -->
+  <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero gel-packet">
+      <h1 class="hero-heading">Discover & Share AI Tools</h1>
+      <p class="hero-subtext">The marketplace for AI tools, Claude Code skills, and automation</p>
+
+      <div class="hero-search">
+        <input
+          type="text"
+          id="search-input"
+          class="hero-search-input gel-input"
+          placeholder="Search tools..."
+          aria-label="Search tools"
+        >
+        <button id="search-btn" class="hero-search-btn gel-btn" aria-label="Search">
+          Search
+        </button>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+      <div class="gel-packet">
+        <h2 class="section-title">Browse by Category</h2>
+        <div id="categories-container" class="categories-grid">
+          <div class="loading"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Tools Section -->
+    <section class="featured-section">
+      <div class="gel-packet">
+        <h2 class="section-title">Trending Tools</h2>
+        <div id="tools-container" class="tools-grid">
+          <div class="loading"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+      <div class="gel-packet">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Browse</h3>
+            <p class="step-desc">Explore thousands of AI tools and Claude Code skills in our marketplace.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Download</h3>
+            <p class="step-desc">Download your favorite tools and integrate them into your projects.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Build</h3>
+            <p class="step-desc">Create amazing things with AI tools and share your own creations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar gel-packet">
+      <div class="stat-item">
+        <div class="stat-number" id="stat-tools">0</div>
+        <div class="stat-label">Tools Listed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="stat-downloads">0</div>
+        <div class="stat-label">Total Downloads</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="stat-creators">0</div>
+        <div class="stat-label">Active Creators</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+  </div>
+
+  <!-- App Core Module -->
+  <script src="/js/app.js"></script>
+
+  <!-- Home Page Logic -->
+  <script src="/js/home.js"></script>
+</body>
+</html>

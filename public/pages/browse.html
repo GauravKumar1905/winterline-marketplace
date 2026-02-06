@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse AI Tools - WinterLine Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/gel-morphism.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: #0A0A0A;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .browse-header {
+            text-align: center;
+            margin: 60px 0 40px;
+        }
+
+        .browse-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FFF;
+            margin: 0 0 10px;
+        }
+
+        .result-count {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .search-section {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            background: #111;
+            color: #FFF;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background: #111;
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .search-bar input::placeholder {
+            color: #888;
+        }
+
+        .browse-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .filter-sidebar {
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 30px;
+        }
+
+        .filter-group h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFF;
+            margin: 0 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #888;
+            transition: color 0.2s;
+        }
+
+        .filter-group label:hover {
+            color: #FFF;
+        }
+
+        .filter-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #FFF;
+        }
+
+        .sort-select {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            background: #111;
+            color: #FFF;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .sort-select option {
+            background: #0A0A0A;
+            color: #FFF;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .tool-card {
+            background: #111;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .tool-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: #1A1A1A;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-thumbnail-placeholder {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .tool-content {
+            padding: 20px;
+        }
+
+        .tool-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #FFF;
+            margin: 0 0 8px;
+            line-height: 1.3;
+        }
+
+        .tool-description {
+            font-size: 0.9rem;
+            color: #888;
+            margin: 0 0 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .tool-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+
+        .category-badge {
+            background: #FFF;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .tool-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .tool-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stars {
+            color: #FFF;
+        }
+
+        .tool-creator {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: #111;
+            color: #FFF;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .pagination button:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: #1A1A1A;
+        }
+
+        .pagination button.active {
+            background: #FFF;
+            color: #000;
+            border-color: #FFF;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .no-results h2 {
+            font-size: 1.5rem;
+            color: #FFF;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .browse-content {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                position: static;
+            }
+
+            .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .browse-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar"></nav>
+
+    <div class="container">
+        <div class="browse-header">
+            <h1>Browse AI Tools</h1>
+            <div class="result-count"><span id="resultCount">Loading...</span> tools found</div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search tools by name, description, or creator..." />
+            </div>
+        </div>
+
+        <div class="browse-content">
+            <aside class="filter-sidebar gel-packet">
+                <div class="filter-group">
+                    <h3>Category</h3>
+                    <div id="categoryFilters"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Rating</h3>
+                    <label>
+                        <input type="checkbox" id="ratingFilter4" data-rating="4" />
+                        ★★★★★ 4+ Stars
+                    </label>
+                    <label>
+                        <input type="checkbox" id="ratingFilter3" data-rating="3" />
+                        ★★★ 3+ Stars
+                    </label>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Sort By</h3>
+                    <select id="sortSelect" class="sort-select">
+                        <option value="popular">Popular</option>
+                        <option value="newest">Newest</option>
+                        <option value="highest-rated">Highest Rated</option>
+                    </select>
+                </div>
+            </aside>
+
+            <main class="tools-section">
+                <div class="tools-grid" id="toolsGrid"></div>
+
+                <div class="pagination" id="pagination"></div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="footer"></footer>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/browse.js"></script>
+</body>
+</html>

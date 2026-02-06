@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Details - WinterLine Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/gel-morphism.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #0B0F1A 0%, #0D1117 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #FFF;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            gap: 12px;
+        }
+
+        .detail-header {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .detail-main {
+            background: rgba(15, 20, 40, 0.7);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .tool-header {
+            margin-bottom: 30px;
+        }
+
+        .tool-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #E8ECF0;
+            margin: 0 0 15px;
+            line-height: 1.2;
+        }
+
+        .tool-header-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .category-badge {
+            background: #222;
+            color: #FFF;
+            padding: 6px 16px;
+            border-radius: 14px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .tool-rating-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .stars-large {
+            color: #CCC;
+            font-size: 1.2rem;
+        }
+
+        .tool-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #7B8794;
+            margin-bottom: 30px;
+        }
+
+        .screenshots-section {
+            margin-bottom: 40px;
+        }
+
+        .screenshots-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #E8ECF0;
+            margin-bottom: 20px;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .screenshot-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .screenshot-item:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .screenshot-placeholder {
+            text-align: center;
+            color: #7B8794;
+        }
+
+        .screenshot-placeholder-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tags-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .tags-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #E8ECF0;
+            margin-bottom: 15px;
+        }
+
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.03);
+            color: #CCC;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .detail-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .creator-card {
+            background: rgba(15, 20, 40, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .creator-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #222;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #FFF;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .creator-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #E8ECF0;
+            margin-bottom: 8px;
+        }
+
+        .creator-link {
+            color: #FFF;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .creator-link:hover {
+            color: #CCC;
+        }
+
+        .stats-card {
+            background: rgba(15, 20, 40, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #7B8794;
+            font-size: 0.95rem;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #E8ECF0;
+        }
+
+        .download-button {
+            background: #222;
+            color: #FFF;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 16px 24px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .download-button:hover {
+            background: #333;
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .report-link {
+            display: block;
+            text-align: center;
+            color: #7B8794;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: color 0.3s;
+        }
+
+        .report-link:hover {
+            color: #CCC;
+        }
+
+        .reviews-section {
+            background: rgba(15, 20, 40, 0.7);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 60px;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 20px;
+        }
+
+        .reviews-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #E8ECF0;
+            margin: 0;
+        }
+
+        .review-count {
+            background: rgba(255, 255, 255, 0.03);
+            color: #CCC;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .add-review-form {
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #E8ECF0;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .star-picker {
+            display: flex;
+            gap: 8px;
+            font-size: 2rem;
+        }
+
+        .star-picker .star {
+            cursor: pointer;
+            color: #4A5568;
+            transition: all 0.3s ease;
+        }
+
+        .star-picker .star:hover,
+        .star-picker .star.selected {
+            color: #CCC;
+            transform: scale(1.2);
+        }
+
+        .review-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            background: rgba(15, 20, 40, 0.7);
+            color: #E8ECF0;
+            resize: vertical;
+            min-height: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .review-textarea:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(15, 20, 40, 0.9);
+        }
+
+        .review-textarea::placeholder {
+            color: #7B8794;
+        }
+
+        .submit-review-button {
+            background: #222;
+            color: #FFF;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .submit-review-button:hover {
+            background: #333;
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-weight: 600;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .review-author-info {
+            flex: 1;
+        }
+
+        .review-author-name {
+            font-weight: 600;
+            color: #E8ECF0;
+            font-size: 0.95rem;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: #7B8794;
+        }
+
+        .review-rating {
+            color: #CCC;
+            font-size: 0.95rem;
+        }
+
+        .review-text {
+            color: #7B8794;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .no-reviews {
+            text-align: center;
+            color: #7B8794;
+            padding: 40px 20px;
+        }
+
+        .related-section {
+            background: rgba(15, 20, 40, 0.7);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 60px;
+        }
+
+        .related-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #E8ECF0;
+            margin: 0 0 30px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            color: #7B8794;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .login-prompt a {
+            color: #FFF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .detail-header {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tool-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .screenshots-grid,
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-main,
+            .reviews-section,
+            .related-section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar"></nav>
+
+    <div class="container">
+        <a href="/browse" class="back-button">← Back to Browse</a>
+
+        <div class="detail-header">
+            <div class="detail-main">
+                <div class="tool-header">
+                    <h1 id="toolName">Loading...</h1>
+                    <div class="tool-header-meta">
+                        <span class="category-badge" id="categoryBadge">-</span>
+                        <div class="tool-rating-display">
+                            <span class="stars-large" id="ratingStars">★</span>
+                            <span id="ratingValue">-</span>
+                            <span style="color: #aaa;" id="reviewCountDisplay">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="tool-description" id="toolDescription">Loading...</p>
+
+                <div class="screenshots-section">
+                    <h3>Screenshots</h3>
+                    <div class="screenshots-grid" id="screenshotsGrid">
+                        <div class="screenshot-item">
+                            <div class="screenshot-placeholder">
+                                <div class="screenshot-placeholder-icon">■</div>
+                                <p>Screenshot 1</p>
+                            </div>
+                        </div>
+                        <div class="screenshot-item">
+                            <div class="screenshot-placeholder">
+                                <div class="screenshot-placeholder-icon">■</div>
+                                <p>Screenshot 2</p>
+                            </div>
+                        </div>
+                        <div class="screenshot-item">
+                            <div class="screenshot-placeholder">
+                                <div class="screenshot-placeholder-icon">■</div>
+                                <p>Screenshot 3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tags-section">
+                    <h3>Tags</h3>
+                    <div class="tags-list" id="tagsList"></div>
+                </div>
+            </div>
+
+            <aside class="detail-sidebar">
+                <div class="creator-card">
+                    <div class="creator-avatar" id="creatorAvatar">■</div>
+                    <div class="creator-name" id="creatorName">Creator</div>
+                    <a href="#" class="creator-link" id="creatorLink">View Profile</a>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <span class="stat-label">Downloads</span>
+                        <span class="stat-value" id="downloadCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Rating</span>
+                        <span class="stat-value" id="ratingValueStat">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Reviews</span>
+                        <span class="stat-value" id="reviewCountStat">0</span>
+                    </div>
+                </div>
+
+                <button class="download-button" id="downloadButton">Download Tool</button>
+                <a href="#" class="report-link" id="reportLink">Report Tool</a>
+            </aside>
+        </div>
+
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2>Reviews</h2>
+                <span class="review-count" id="reviewHeaderCount">0 reviews</span>
+            </div>
+
+            <div id="addReviewContainer"></div>
+
+            <div class="reviews-list" id="reviewsList">
+                <div class="no-reviews">No reviews yet. Be the first to review!</div>
+            </div>
+        </div>
+
+        <div class="related-section">
+            <h2>Related Tools</h2>
+            <div class="related-grid" id="relatedToolsGrid"></div>
+        </div>
+    </div>
+
+    <footer class="footer"></footer>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/tool-detail.js"></script>
+</body>
+</html>
