@@ -17,10 +17,16 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "sql.js": "^1.13.0"
   },
-  "devDependencies": {},
-  "keywords": ["claude", "ai", "tools", "marketplace", "mcp"],
+  "keywords": [
+    "claude",
+    "ai",
+    "tools",
+    "marketplace",
+    "mcp"
+  ],
   "author": "WinterLine",
   "license": "MIT"
 }
